@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:synapse_launcher/launcher.dart';
 import 'package:synapse_launcher/views/launcher_view.dart';
+import 'package:supercharged/supercharged.dart';
 
 void main() {
   Launcher.createInstallationDir();
+  Launcher.reloadApiSettings();
   runApp(MyApp());
 }
+
+var t1 = GoogleFonts.openSans(fontSize: 24, color: Colors.white);
+var t2 = GoogleFonts.openSans(fontSize: 16, color: Colors.white);
+var b1 = GoogleFonts.openSans(fontSize: 16, color: "#dfe6e9".toColor());
+var b2 = GoogleFonts.openSans(fontSize: 16, color: "#636e72".toColor());
+var l1 = GoogleFonts.openSans(fontSize: 12, color: "#636e72".toColor());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Synapse Launcher',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,6 +33,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        brightness: Brightness.dark
       ),
       home: LauncherView(),
     );

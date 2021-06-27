@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
@@ -15,11 +16,15 @@ import 'package:supercharged/supercharged.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
+import 'models/api_settings_content.dart';
+
 Directory baseGameDirectory;
 Directory installLocation;
 Directory installGameLocation;
 
 class Launcher {
+  static ApiSettingsContent apiSettings;
+
   static void createInstallationDir() {
     installLocation =
         Directory(Platform.environment["APPDATA"] + "\\" + "Synapse Client");
@@ -36,6 +41,18 @@ class Launcher {
     }
   }
 
+  static String getUserIdOrNull() {
+    var file = File(installLocation.path + "\\" + "user.dat");
+    if (!file.existsSync()) return null;
+    return file.readAsStringSync();
+  }
+
+  static String getUserCertificateOrNull() {
+    var file = File(installLocation.path + "\\" + "certificate.dat");
+    if (!file.existsSync()) return null;
+    return file.readAsStringSync();
+  }
+
   static Future loadSaved() async {
     var preferences = await SharedPreferences.getInstance();
     if (preferences.containsKey("BaseGame")) {
@@ -43,6 +60,26 @@ class Launcher {
       print("Loaded baseGameDirectory from Preferences");
     }
   }
+
+  static ApiSettingsContent reloadApiSettings() {
+    print("Reloading API Settings");
+    var file = File(installLocation.path + "\\" + "apis.json");
+    if (!file.existsSync()) {
+      setApiSettings(ApiSettingsContent.defaults);
+      return ApiSettingsContent.defaults;
+    }
+    var content = file.readAsStringSync();
+    apiSettings = ApiSettingsContent.fromJson(jsonDecode(content));
+    return apiSettings;
+  }
+
+  static ApiSettingsContent setApiSettings(ApiSettingsContent content) {
+    apiSettings = content;
+    var file = File(installLocation.path + "\\" + "apis.json");
+    file.writeAsString(jsonEncode(content.toJson()));
+    print("Created Api Settings");
+  }
+
 
   static void selectGameDirectory() async {
     var filePicker = OpenFilePicker();
