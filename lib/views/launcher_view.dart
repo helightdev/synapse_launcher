@@ -16,9 +16,14 @@ import 'package:synapse_launcher/blocs/account_cubit.dart';
 import 'package:synapse_launcher/blocs/game_running_cubit.dart';
 import 'package:synapse_launcher/blocs/progress_cubit.dart';
 import 'package:synapse_launcher/central.dart';
+import 'package:synapse_launcher/views/developer_tools.dart';
+import 'package:synapse_launcher/components/launch_button.dart';
 import 'package:synapse_launcher/launcher.dart';
 import 'package:synapse_launcher/views/myservers_view.dart';
 import 'package:synapse_launcher/views/settings_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../main.dart';
 
 class LauncherView extends StatefulWidget {
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
@@ -126,13 +131,30 @@ class _LauncherViewState extends State<LauncherView> {
           color: "#1e272e".toColor(),
           child: ListView(
            children: [
+             DrawerHeader(child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text("Synapse Client", style: t1),
+                 Text("by the AnomalousCoders", style: b1),
+               ],
+             ), decoration: BoxDecoration(color: "#3498db".toColor()),),
+             ListTile(title: Text("Pages & Tools"), dense: true,),
              ListTile(
                leading: Icon(EvaIcons.hardDriveOutline, size: 36,),
                title: Text('My Servers'),
-               subtitle: Text("Manage your old and new servers"),
+               subtitle: Text("Manage and verify your servers"),
                onTap: () {
                  Navigator.of(context).pop();
                  Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => MyServersView()));
+               },
+             ),
+             ListTile(
+               leading: Icon(EvaIcons.githubOutline, size: 36,),
+               title: Text('DevTools'),
+               subtitle: Text("Tooling for client development"),
+               onTap: () {
+                 Navigator.of(context).pop();
+                 Navigator.of(context).push(new MaterialPageRoute(builder: (ctx) => DeveloperTools()));
                },
              ),
              ListTile(
@@ -149,6 +171,31 @@ class _LauncherViewState extends State<LauncherView> {
                  LauncherView.featureNotSupported();
                },
              ),
+             Divider(),
+             ListTile(title: Text("Contact & Information"), dense: true,),
+             ListTile(
+               leading: Image.asset("assets/discord.png", height: 36, width: 36, filterQuality: FilterQuality.high,),
+               title: Text('Discord'),
+               subtitle: Text("Get in touch with the community"),
+               onTap: () async {
+                 Navigator.of(context).pop();
+                 launch("https://discord.gg/wSBHXwy");
+               },
+             ),
+             ListTile(
+               leading: Icon(EvaIcons.bookOutline, size: 36,),
+               title: Text('Documentation'),
+               subtitle: Text("Technical information and help"),
+               onTap: () async {
+                 Navigator.of(context).pop();
+                 launch("https://docs.client.synapsesl.xyz");
+               },
+             ),
+             AboutListTile(
+               applicationName: "Synapse Client Launcher",
+               applicationVersion: "1.0.0",
+               applicationLegalese: "We are not Northwood and are not affiliated with them",
+             )
            ],
           ),
         ),
@@ -190,7 +237,7 @@ class _LauncherViewState extends State<LauncherView> {
                       height: 24.0*2,
                       child: IconButton(onPressed: () {
                         LauncherView.scaffoldKey.currentState.openDrawer();
-                      }, icon: Icon(Icons.expand_more, size: 24,), color: "#dfe6e9".toColor()),
+                      }, icon: Icon(EvaIcons.chevronRight, size: 24,), color: "#dfe6e9".toColor()),
                     ),
                   ),
                 ),
@@ -287,26 +334,7 @@ class _LauncherViewState extends State<LauncherView> {
                                 Container(
                                   width: (buttons / 4 - (8 * 3)) * 2,
                                   height: 64,
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      if (baseGameDirectory == null)
-                                        Launcher.selectGameDirectory();
-                                      await Launcher.startGame();
-                                    },
-                                    child: Text("Launch Game",
-                                        style:
-                                            GoogleFonts.openSans(fontSize: 24)),
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                "#0984e3".toColor()),
-                                        shadowColor: MaterialStateProperty.all(
-                                            "#0984e3"
-                                                .toColor()
-                                                .withOpacity(.5)),
-                                        elevation:
-                                            MaterialStateProperty.all(10)),
-                                  ),
+                                  child: LaunchButton(),
                                 ),
                                 Container(
                                   width: (buttons / 4 - (8 * 3)) * 1,

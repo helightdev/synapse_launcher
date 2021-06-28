@@ -10,13 +10,15 @@ import 'package:synapse_launcher/blocs/navigation_cubit.dart';
 import 'package:synapse_launcher/blocs/progress_cubit.dart';
 import 'package:synapse_launcher/components/account_settings.dart';
 import 'package:synapse_launcher/components/api_settings.dart';
-import 'package:synapse_launcher/components/developer_settings.dart';
+import 'package:synapse_launcher/views/developer_tools.dart';
 import 'package:synapse_launcher/components/server_edit_dialog.dart';
 import 'package:synapse_launcher/components/server_widget.dart';
 import 'package:synapse_launcher/launcher.dart';
 import 'package:synapse_launcher/models/server.dart';
 import 'package:synapse_launcher/servers.dart';
 import 'package:synapse_launcher/views/launcher_view.dart';
+
+import '../main.dart';
 
 class MyServersView extends StatefulWidget {
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
@@ -108,7 +110,8 @@ class _MyServersViewState extends State<MyServersView> {
                                         backgroundColor: "#1e272e".toColor(),
                                       ));
                             },
-                            child: Text("New Server"))
+                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all("#0984e3".toColor())),
+                            child: Text("New Server", style: b1,))
                       ]),
                     ]));
               },

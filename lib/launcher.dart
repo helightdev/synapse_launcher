@@ -260,6 +260,25 @@ class Launcher {
     }
   }
 
+  static Future startVanillaGame() async {
+    try {
+      if (baseGameDirectory.existsSync()) {
+        print("Running vanilla game in ${baseGameDirectory.path}");
+        gameRunningCubit.emit(GameStarted());
+        var process = await Process.run("start", ["SCPSL.exe"],
+            workingDirectory: baseGameDirectory.path, runInShell: true);
+        print("Finished with exit code ${process.exitCode}!");
+        gameRunningCubit.emit(GameStopped());
+      } else {
+        await install();
+        await startGame();
+      }
+    } catch (e, e1) {
+      gameRunningCubit.emit(GameStopped());
+      LauncherView.showError(e, e1);
+    }
+  }
+
   static Future unzip(File file, Directory out) async {
     final bytes = file.readAsBytesSync();
     final archive = ZipDecoder().decodeBytes(bytes);

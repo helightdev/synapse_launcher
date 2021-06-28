@@ -23,6 +23,13 @@ class Central {
     print("Loaded Session");
   }
 
+  static Future ensureLoadedAccount() async {
+    accountCubit.emit(AccountStateInitial());
+    var uid = Launcher.getUserIdOrNull();
+    var account = uid == null ? null : await getAccount(uid);
+    accountCubit.emit(AccountStateLoaded(account));
+  }
+
   static bool isAdminTokenValid() {
     if (_adminToken == null) return false;
     var e = getAdminTokenExp();
@@ -41,13 +48,6 @@ class Central {
     return DateTime.fromMillisecondsSinceEpoch(d["exp"] * 1000);
   }
 
-  static Future ensureLoadedAccount() async {
-    accountCubit.emit(AccountStateInitial());
-    var uid = Launcher.getUserIdOrNull();
-    var account = uid == null ? null : await getAccount(uid);
-    accountCubit.emit(AccountStateLoaded(account));
-  }
-
   static Future<String> openSession(String audience) async {
     var res = await http.post(Uri.parse("${Launcher.apiSettings.centralServer}/user/session"), body: Launcher.getUserCertificateOrNull(), headers: {
       "X-Target-Server": audience
@@ -58,6 +58,20 @@ class Central {
   static Future<Account> getAccount(String uid) async {
     var res = await http.get(Uri.parse("${Launcher.apiSettings.centralServer}/public/$uid"));
     return Account.fromJson(jsonDecode(res.body));
+  }
+
+  static Future changeName(String name) async {
+    print("0");
+    await Central.ensureOpenSession();
+    print("1");
+    print(name);
+    var res = await http.post(Uri.parse("${Launcher.apiSettings.centralServer}/user/changeName"), body: name, headers: {
+      "Authorization": sessionCubit.state.session,
+      "Content-Type": "application/json"
+    });
+    print("2");
+    print(res.statusCode);
+    print(res.body);
   }
 
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:synapse_launcher/launcher.dart';
@@ -33,7 +34,10 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
-        brightness: Brightness.dark
+        brightness: Brightness.dark,
+        dialogBackgroundColor: "#1e272e".toColor(),
+        backgroundColor: "#1e272e".toColor(),
+        popupMenuTheme: PopupMenuThemeData(color: "#1e272e".toColor())
       ),
       home: LauncherView(),
     );

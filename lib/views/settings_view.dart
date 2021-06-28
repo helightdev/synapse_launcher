@@ -7,7 +7,7 @@ import 'package:synapse_launcher/blocs/navigation_cubit.dart';
 import 'package:synapse_launcher/blocs/progress_cubit.dart';
 import 'package:synapse_launcher/components/account_settings.dart';
 import 'package:synapse_launcher/components/api_settings.dart';
-import 'package:synapse_launcher/components/developer_settings.dart';
+import 'package:synapse_launcher/views/developer_tools.dart';
 
 class SettingsView extends StatelessWidget {
 
@@ -42,11 +42,9 @@ class SettingsView extends StatelessWidget {
                               TextButton(child: Text("Account", style: GoogleFonts.openSans(fontSize: 16, color: Colors.white),), onPressed: () {
                                 navigationCubit.emit(0);
                               },),
+                              Container(height: 8,),
                               TextButton(child: Text("API Locations", style: GoogleFonts.openSans(fontSize: 16, color: Colors.white),), onPressed: () {
                                 navigationCubit.emit(1);
-                              },),
-                              TextButton(child: Text("DevTools", style: GoogleFonts.openSans(fontSize: 16, color: Colors.white),), onPressed: () {
-                                navigationCubit.emit(2);
                               },),
                             ],
                           ),),
@@ -62,10 +60,6 @@ class SettingsView extends StatelessWidget {
 
                                   case 1: {
                                     return ApiSettings();
-                                  }
-
-                                  case 2: {
-                                    return DeveloperSettings();
                                   }
                                 }
 
@@ -83,8 +77,7 @@ class SettingsView extends StatelessWidget {
                                     valueColor:
                                     AlwaysStoppedAnimation("#74b9ff".toColor()),
                                     backgroundColor: "#2d3436".toColor(),
-                                  )
-                                      : Container();
+                                  ) : Container();
                                 },
                                 bloc: progressCubit,
                               ),

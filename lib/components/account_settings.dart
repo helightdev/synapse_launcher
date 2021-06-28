@@ -10,6 +10,7 @@ import 'package:synapse_launcher/blocs/progress_cubit.dart';
 import 'package:synapse_launcher/blocs/session_cubit.dart';
 import 'package:synapse_launcher/central.dart';
 import 'package:synapse_launcher/launcher.dart';
+import 'package:synapse_launcher/views/launcher_view.dart';
 import 'package:synapse_launcher/views/settings_view.dart';
 
 class AccountSettings extends StatefulWidget {
@@ -93,7 +94,17 @@ class _AccountSettingsState extends State<AccountSettings> {
               Container(height: 32),
               if (account.exists) Row(children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    progressCubit.emit(ProgressUpdate(0.0,0.0, isNull: true));
+                    try {
+                      await Central.changeName(nameController.text);
+                      await Central.ensureLoadedAccount();
+                      LauncherView.showSuccessful("Updated!", "You successfully updated your player name", context: SettingsView.scaffoldKey.currentContext);
+                    } catch (e,e1) {
+                      LauncherView.showError(e, e1, context: SettingsView.scaffoldKey.currentContext);
+                    }
+                    progressCubit.emit(ProgressInitial());
+                  },
                   child: Text("Save",
                       style: GoogleFonts.openSans(
                           fontSize: 16, color: Colors.white)),
